@@ -10,12 +10,7 @@ class Home extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("狗子转"),
-      ),
-      body: HomeContent(context),
-    );
+    return HomeContent(context);
   }
 }
 class HomeContent extends StatefulWidget{

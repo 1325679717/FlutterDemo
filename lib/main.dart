@@ -22,7 +22,20 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: BottomNavigationWidget(),
+      home: Container(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("狗子"),
+          ),
+          drawer: Drawer(
+              child: Center(
+                child: Text("Drawer"),
+              ),
+          ),
+          body: BottomNavigationWidget()
+        ),
+      ),
+
     );
   }
 }

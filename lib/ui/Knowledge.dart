@@ -5,10 +5,8 @@ class Knowledge extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-          title:Text("体系")
-      ),
+    return Center(
+      child: Text("体系"),
     );
   }
 

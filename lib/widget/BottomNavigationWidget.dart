@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app1223/ui/Article.dart';
 import 'package:flutter_app1223/ui/Knowledge.dart';
 
 import '../ui/Home.dart';
@@ -18,7 +19,7 @@ class BottomNavigationWidgetState extends State<BottomNavigationWidget>{
   void initState() {
     super.initState();
     _currentIndex = 0;
-    pages = [Home(),Knowledge(),Home(),Home(),Home()];
+    pages = [Article(),Knowledge(),Home(),Home(),Home()];
   }
   @override
   Widget build(BuildContext context) {
