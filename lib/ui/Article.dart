@@ -102,40 +102,42 @@ class ItemState extends State<ArticleItem>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
+          height: 100,
           padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(width: 10, color: Color(0xffe2e2e2)))
-              ),
-              child: Expanded(
-                child:Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-    //              Text("abc")
-    //              Expanded(
-    //                child: Text(
-    //                    _articleInfo.author,
-    //                    overflow: TextOverflow.ellipsis,
-    //                    maxLines: 2,
-    //                    style:TextStyle(
-    //                        fontSize: 12,
-    //                        color: Colors.grey
-    //                    )
-    //                ),
-    //              ),
+          decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 10, color: Color(0xffe2e2e2)))),
 
-                  Text(
-                        _articleInfo.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style:TextStyle(
-                        fontSize: 15,
-                        color: Colors.black
-                      )
-                      ),
+//                  child:Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        //              Text("abc")
+                        Expanded(
+                          child: Text(
+                              _articleInfo.author,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style:TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey
+                              )
+                          ),
+                        ),
 
-                  ],
-              ),
-            )
+                        Expanded(
+                          child: Text(
+                              _articleInfo.title,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style:TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black
+                              )
+                          ),
+                        ),
+
+                      ],
+//                    ),
+                  ),
     );
   }
 
