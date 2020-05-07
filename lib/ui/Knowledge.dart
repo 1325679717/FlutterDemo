@@ -7,7 +7,7 @@ class Knowledge extends StatelessWidget{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-          title:Text("知识体系")
+          title:Text("体系")
       ),
     );
   }

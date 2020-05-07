@@ -38,22 +38,22 @@ class BottomNavigationWidgetState extends State<BottomNavigationWidget>{
             ),
             BottomNavigationBarItem(
                 backgroundColor:Colors.blue,
-                icon: Icon(Icons.dashboard),
-                title: Text("知识体系")
+                icon: Icon(Icons.business),
+                title: Text("广场")
             ),
             BottomNavigationBarItem(
                 backgroundColor:Colors.blue,
-                icon: Icon(Icons.dashboard),
+                icon: Icon(Icons.camera),
                 title: Text("公众号")
             ),
             BottomNavigationBarItem(
                 backgroundColor:Colors.blue,
                 icon: Icon(Icons.dashboard),
-                title: Text("导航")
+                title: Text("体系")
             ),
             BottomNavigationBarItem(
                 backgroundColor:Colors.blue,
-                icon: Icon(Icons.dashboard),
+                icon: Icon(Icons.assignment),
                 title: Text("项目")
             )
           ],
@@ -62,7 +62,10 @@ class BottomNavigationWidgetState extends State<BottomNavigationWidget>{
           switchTab(i);
         },
       ),
-      body: pages[_currentIndex],
+      body:IndexedStack(
+        index: _currentIndex,
+        children: pages,
+      ) ,
     );
   }
   void switchTab(int index){

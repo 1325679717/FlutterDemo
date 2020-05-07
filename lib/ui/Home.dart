@@ -30,7 +30,7 @@ class HomeContent extends StatefulWidget{
   }
 
 }
-class HomeState extends State<HomeContent>{
+class HomeState extends State<HomeContent> with AutomaticKeepAliveClientMixin {
   BuildContext context;
   HomeState(BuildContext context){
     this.context = context;
@@ -66,5 +66,7 @@ class HomeState extends State<HomeContent>{
       itemCount: data.length,
     );
   }
-
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
