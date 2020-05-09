@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app1223/model/ArticleInfo.dart';
@@ -102,42 +103,39 @@ class ItemState extends State<ArticleItem>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-          height: 100,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 10, color: Color(0xffe2e2e2)))),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 10, color: Color(0xffe2e2e2)))),
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+            alignment:AlignmentDirectional.topStart,
+             child: Text(
+                 _articleInfo.author == ""?_articleInfo.shareUser:_articleInfo.author,
+                 overflow: TextOverflow.ellipsis,
+                 maxLines: 1,
+                 style:TextStyle(
+                     fontSize: 12,
+                     color: Colors.grey
+                 )
+             ),
+            ),
 
-//                  child:Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        //              Text("abc")
-                        Expanded(
-                          child: Text(
-                              _articleInfo.author,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style:TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey
-                              )
-                          ),
-                        ),
-
-                        Expanded(
-                          child: Text(
-                              _articleInfo.title,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style:TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black
-                              )
-                          ),
-                        ),
-
-                      ],
-//                    ),
-                  ),
+            Container(
+                padding: EdgeInsets.only(top: 10),
+                alignment:AlignmentDirectional.topStart,
+                child:Text(
+                    _articleInfo.title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style:TextStyle(
+                        fontSize: 15,
+                        color: Colors.black
+                    )
+                )
+            ),
+          ],
+        ),
     );
   }
 
