@@ -73,14 +73,40 @@ class ArticleState extends State<Article>{
           SliverList(
             delegate: SliverChildBuilderDelegate(
                 (context,index){
-                  return ArticleItem(list[index]);
+                  if(index == 0){
+                    return PageWidget();
+                  }
+                  return ArticleItem(list[index-1]);
                 },
-              childCount: list.length
+              childCount: list.length + 1
             ),
           )
     ]);
   }
 }
+/**
+ *
+ * pageView item
+ *
+ * */
+class PageWidget extends StatelessWidget{
+  List<String> list = ["狗子淼","狗子淼","狗子淼"];
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      height: 150,
+      alignment:AlignmentDirectional.center,
+      child: PageView(
+        children: list.map((content)=> Container(
+          child: Text(content,textAlign: TextAlign.center,),
+        )).toList(),
+      ),
+    );
+  }
+
+}
+
 
 class ArticleItem extends StatefulWidget{
   ArticleInfo _articleInfo;
