@@ -119,7 +119,7 @@ class PageWidget extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      height: 200,
+      height: 230,
       alignment:AlignmentDirectional.center,
       child: PageView(
         children: list.map((banner)=> Container(
