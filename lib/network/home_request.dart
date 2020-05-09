@@ -1,5 +1,6 @@
 
 
+import 'package:dio/dio.dart';
 import 'package:flutter_app1223/model/ArticleInfo.dart';
 import 'package:flutter_app1223/model/BannerInfo.dart';
 import 'package:flutter_app1223/model/MovieInfo.dart';
@@ -49,24 +50,14 @@ class HomeRequest {
   /**
    * banner
    */
-  Future<List<BannerInfo>> getBannerList() async {
+  Future<List<Response>> getHomeAllList() async {
     // 1.拼接URL
-    final url = "https://www.wanandroid.com/banner/json";
+    final url = "https://www.wanandroid.com/article/list/0/json";
+    final url2 = "https://www.wanandroid.com/banner/json";
 
     // 2.发送请求
-    final result = await HttpRequest.request(url);
+    final result = await HttpRequest.requestMerge(url,url2);
 
-    // 3.转成模型对象
-    final datas = result["data"];
-//    if(data == null){
-//      return null;
-//    }
-//    final datas = data["datas"];
-    List<BannerInfo> articles = [];
-    for (var d in datas) {
-      articles.add(BannerInfo.fromJson(d));
-    }
-
-    return articles;
+    return result;
   }
 }

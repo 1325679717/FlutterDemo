@@ -37,13 +37,31 @@ class ArticleState extends State<Article>{
     super.initState();
     _controller = EasyRefreshController();
     request = new HomeRequest();
-    request.getArticleList(_currentPage).then((value){
+    request.getHomeAllList().then((value){
+      final data = value[0].data["data"];
+      if(data == null){
+        return null;
+      }
+      final datas = data["datas"];
+      List<ArticleInfo> articles = [];
+      for (var d in datas) {
+        articles.add(ArticleInfo.fromJson(d));
+      }
+
+      final banJson = value[1].data["data"];
+      List<BannerInfo> bans = [];
+      for(var info in banJson){
+        bans.add(BannerInfo.fromJson(info));
+      }
+
       setState(() {
-        list.addAll(value);
+        banners.addAll(bans);
+        list.addAll(articles);
       });
     });
 
   }
+
   @override
   Widget build(BuildContext context) {
       return EasyRefresh.custom(
@@ -77,7 +95,7 @@ class ArticleState extends State<Article>{
             delegate: SliverChildBuilderDelegate(
                 (context,index){
                   if(index == 0){
-                    return PageWidget();
+                    return PageWidget(banners);
                   }
                   return ArticleItem(list[index-1]);
                 },
@@ -93,16 +111,53 @@ class ArticleState extends State<Article>{
  *
  * */
 class PageWidget extends StatelessWidget{
-  List<String> list = ["狗子淼","狗子淼","狗子淼"];
+  List<BannerInfo> list;
+  PageWidget(List<BannerInfo> list){
+    this.list = list;
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      height: 150,
+      height: 200,
       alignment:AlignmentDirectional.center,
       child: PageView(
-        children: list.map((content)=> Container(
-          child: Text(content,textAlign: TextAlign.center,),
+        children: list.map((banner)=> Container(
+//          child: Text(banner.title,textAlign: TextAlign.center,),
+//            child: Image.network(banner.imagePath)
+            child: Container(
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    child: Image.network(
+                        banner.imagePath,
+                        fit:BoxFit.cover),
+                  ),
+//
+                  Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        height: 25,
+                        decoration: BoxDecoration(color: Colors.black12),
+                        margin: EdgeInsets.all(0),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Text(
+                                banner.title,
+                                style: TextStyle(
+                                    color: Colors.white
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+//                    )
+                ],
+              ),
+            ),
         )).toList(),
       ),
     );
