@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app1223/model/ArticleInfo.dart';
+import 'package:flutter_app1223/model/BannerInfo.dart';
 import 'package:flutter_app1223/network/home_request.dart';
 import 'package:flutter_app1223/ui/Home.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -29,6 +30,7 @@ class ArticleState extends State<Article>{
   EasyRefreshController _controller;
   int _currentPage = 0;
   List<ArticleInfo> list = [];
+  List<BannerInfo> banners = [];
   HomeRequest request;
   @override
   void initState() {
@@ -40,6 +42,7 @@ class ArticleState extends State<Article>{
         list.addAll(value);
       });
     });
+
   }
   @override
   Widget build(BuildContext context) {
