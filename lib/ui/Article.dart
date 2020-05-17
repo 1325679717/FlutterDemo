@@ -2,6 +2,7 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app1223/bloc/ArticleBloc.dart';
 import 'package:flutter_app1223/model/ArticleInfo.dart';
 import 'package:flutter_app1223/model/BannerInfo.dart';
 import 'package:flutter_app1223/network/home_request.dart';
@@ -33,85 +34,26 @@ class ArticleState extends State<Article>{
   int _currentPage = 0;
   List<ArticleInfo> list = [];
   List<BannerInfo> banners = [];
-  HomeRequest request;
+
+  ArticleBloc _articleBloc;
   @override
   void initState() {
     super.initState();
+    _articleBloc = new ArticleBloc();
+
     _refreshController = RefreshController(initialRefresh: false);
-    request = new HomeRequest();
-    request.getHomeAllList().then((value){
-      final data = value[0].data["data"];
-      if(data == null){
-        return null;
-      }
-      final datas = data["datas"];
-      List<ArticleInfo> articles = [];
-      for (var d in datas) {
-        articles.add(ArticleInfo.fromJson(d));
-      }
 
-      final banJson = value[1].data["data"];
-      List<BannerInfo> bans = [];
-      for(var info in banJson){
-        bans.add(BannerInfo.fromJson(info));
-      }
+    _articleBloc.articleData.add(_currentPage);
 
-      setState(() {
-        banners.addAll(bans);
-        list.add(new ArticleInfo());
-        list.addAll(articles);
-      });
-    });
 
   }
 
   @override
   Widget build(BuildContext context) {
 
-//    Widget buidRefresh(BuildContext context){
-//      return EasyRefresh.custom(
-//          enableControlFinishRefresh: false,
-//          enableControlFinishLoad: true,
-//          controller: _controller,
-//          header: ClassicalHeader(),
-//          footer: ClassicalFooter(),
-//          onRefresh: () async{
-//            _currentPage = 0;
-//            request.getArticleList(_currentPage).then((value){
-//              _controller.resetLoadState();
-//              setState(() {
-//                list.clear();
-//                list.add(new ArticleInfo());
-//                list.addAll(value);
-//              });
-//            });
-//          },
-//          onLoad: ()async{
-//            _currentPage = _currentPage +1;
-//            print("Article _currentPage = $_currentPage");
-//            request.getArticleList(_currentPage).then((value){
-//              _controller.finishLoad(success: true,noMore: value.length == 0);
-//              setState(() {
-//                list.addAll(value);
-//              });
-//            });
-//          },
-//          slivers: <Widget>[
-//            SliverList(
-//              delegate: SliverChildBuilderDelegate(
-//                    (context,index){
-//                  if(index == 0){
-//                    return PageWidget(banners);
-//                  }
-//                  return ArticleItem(list[index]);
-//                },
-//                childCount: list.length,
-//
-//              ),
-//            )
-//          ]);
-//    }
-    Widget buildRefresh(BuildContext context){
+
+    Widget buildRefresh(BuildContext context, AsyncSnapshot<List<ArticleInfo>> snapshot){
+      list.addAll(snapshot.data);
       return SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
@@ -140,16 +82,8 @@ class ArticleState extends State<Article>{
           },
         ),
         controller: _refreshController,
-        onRefresh: () async {
-          _currentPage = 0;
-          request.getArticleList(_currentPage).then((value) {
-            _refreshController.refreshCompleted();
-            setState(() {
-              list.clear();
-              list.add(new ArticleInfo());
-              list.addAll(value);
-            });
-          });
+        onRefresh:()async{
+          _articleBloc.articleData.add(0);
         },
         child: ListView.builder(itemBuilder: (BuildContext context, int index){
                   if(index == 0){
@@ -159,19 +93,19 @@ class ArticleState extends State<Article>{
               },
               itemCount: list.length,
         ),
-        onLoading: ()async{
-            _currentPage = _currentPage +1;
-            print("Article _currentPage = $_currentPage");
-            request.getArticleList(_currentPage).then((value){
-              _refreshController.loadComplete();
-              setState(() {
-                list.addAll(value);
-              });
-            });
-          },
+        onLoading:()async{
+          _articleBloc.articleData.add(_currentPage + 1);
+        }
+
       );
     }
-    return buildRefresh(context);
+    return StreamBuilder(
+        stream: _articleBloc.articleStream,
+        builder: (BuildContext context, AsyncSnapshot<List<ArticleInfo>> snapshot){
+
+            return buildRefresh(context,snapshot);
+        },
+    );
   }
 }
 /**
