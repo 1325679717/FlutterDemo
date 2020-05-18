@@ -9,14 +9,6 @@ import 'package:flutter_app1223/network/home_request.dart';
 import 'package:flutter_app1223/ui/WebDetail.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-//class Article extends StatelessWidget{
-//  @override
-//  Widget build(BuildContext context) {
-//    // TODO: implement build
-//    throw UnimplementedError();
-//  }
-//}
-
 class Article extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -36,6 +28,7 @@ class ArticleState extends State<Article>{
   List<BannerInfo> banners = [];
 
   ArticleBloc _articleBloc;
+  bool isRefresh = true;
   @override
   void initState() {
     super.initState();
@@ -53,7 +46,15 @@ class ArticleState extends State<Article>{
 
 
     Widget buildRefresh(BuildContext context, AsyncSnapshot<List<ArticleInfo>> snapshot){
-      list.addAll(snapshot.data);
+      if(snapshot != null && snapshot.data != null) {
+        if(isRefresh){
+          list.clear();
+          _refreshController.refreshCompleted();
+        }else{
+          _refreshController.loadComplete();
+        }
+        list.addAll(snapshot.data);
+      }
       return SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
@@ -83,6 +84,7 @@ class ArticleState extends State<Article>{
         ),
         controller: _refreshController,
         onRefresh:()async{
+          isRefresh = true;
           _articleBloc.articleData.add(0);
         },
         child: ListView.builder(itemBuilder: (BuildContext context, int index){
@@ -94,6 +96,7 @@ class ArticleState extends State<Article>{
               itemCount: list.length,
         ),
         onLoading:()async{
+          isRefresh = false;
           _articleBloc.articleData.add(_currentPage + 1);
         }
 
@@ -106,6 +109,11 @@ class ArticleState extends State<Article>{
             return buildRefresh(context,snapshot);
         },
     );
+  }
+  @override
+  void dispose() {
+    _articleBloc.dispose();
+    super.dispose();
   }
 }
 /**
@@ -121,8 +129,6 @@ class PageWidget extends StatelessWidget{
   Widget buildBanner (BuildContext context){
     return PageView(
       children: list.map((banner)=> Container(
-//          child: Text(banner.title,textAlign: TextAlign.center,),
-//            child: Image.network(banner.imagePath)
         child: Container(
           child: Stack(
             children: <Widget>[
