@@ -38,6 +38,8 @@ class ArticleState extends State<Article>{
 
     _articleBloc.articleData.add(_currentPage);
 
+//    _articleBloc.actionData.add(null);
+
 
   }
 
@@ -89,7 +91,8 @@ class ArticleState extends State<Article>{
         },
         child: ListView.builder(itemBuilder: (BuildContext context, int index){
                   if(index == 0){
-                    return PageWidget(banners);
+                    return PageWidget(_articleBloc);
+
                   }
                   return ArticleItem(list[index]);
               },
@@ -122,53 +125,69 @@ class ArticleState extends State<Article>{
  *
  * */
 class PageWidget extends StatelessWidget{
-  List<BannerInfo> list;
-  PageWidget(List<BannerInfo> list){
-    this.list = list;
+  ArticleBloc _articleBloc;
+  List<BannerInfo> list = [];
+  PageWidget(ArticleBloc _articleBloc){
+    this._articleBloc = _articleBloc;
   }
   Widget buildBanner (BuildContext context){
-    return PageView(
-      children: list.map((banner)=> Container(
-        child: Container(
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                child: Image.network(
-                    banner.imagePath,
-                    fit:BoxFit.cover),
-              ),
+      return PageView(
+               children: list.map((banner)=> Container(
+                 child: Container(
+                   child: Stack(
+                     children: <Widget>[
+                       Positioned(
+                         child: Image.network(
+                             banner.imagePath,
+                             fit:BoxFit.cover),
+                       ),
 //
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  height: 25,
-                  decoration: BoxDecoration(color: Colors.black12),
-                  margin: EdgeInsets.all(0),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          banner.title,
-                          style: TextStyle(
-                              color: Colors.white
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
+                       Align(
+                         alignment: Alignment.bottomRight,
+                         child: Container(
+                           height: 25,
+                           decoration: BoxDecoration(color: Colors.black12),
+                           margin: EdgeInsets.all(0),
+                           child: Row(
+                             children: <Widget>[
+                               Container(
+                                 child: Text(
+                                   "banner",
+//                          banner.title,
+                                   overflow: TextOverflow.ellipsis,
+                                   style: TextStyle(
+                                       color: Colors.white
+                                   ),
+                                 ),
+                               )
+                             ],
+                           ),
+                         ),
+                       )
 //                    )
-            ],
-          ),
-        ),
-      )).toList(),
-    );
-  }
+                     ],
+                   ),
+                 ),
+               )).toList(),
+         );
+   }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
+        height: 230,
+        child:StreamBuilder(
+        stream: _articleBloc.bannerStream,
+        builder: (BuildContext context, AsyncSnapshot<List<BannerInfo>> snapshot) {
+          if (snapshot.data == null) {
+            return Container(width: 0, height: 0);
+          }
+          list.addAll(snapshot.data);
+          return buildBanner(context);
+        }
+      )
+    );
+      Container(
       height: 230,
       alignment:AlignmentDirectional.center,
       child:buildBanner(context),
