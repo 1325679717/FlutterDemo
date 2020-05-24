@@ -25,7 +25,7 @@ class ArticleState extends State<Article>{
 
   int _currentPage = 0;
   List<ArticleInfo> list = [];
-  List<BannerInfo> banners = [];
+//  List<BannerInfo> banners = [];
 
   ArticleBloc _articleBloc;
   bool isRefresh = true;
@@ -45,19 +45,55 @@ class ArticleState extends State<Article>{
 
     _articleBloc.refresh();
 
-//    _articleBloc.actionData.add(null);
+    Widget buildBanner (BuildContext context, List<BannerInfo> banners){
+      return Container(
+        height: 230,
+        child:PageView(
+        children: banners.map((banner)=> Container(
+          child: Container(
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  child: Image.network(
+                      banner.imagePath,
+                      fit:BoxFit.cover),
+                ),
+//
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    height: 25,
+                    decoration: BoxDecoration(color: Colors.black12),
+                    margin: EdgeInsets.all(0),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            "banner",
+//                          banner.title,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.white
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+//                    )
+              ],
+            ),
+          ),
+        )).toList(),
+      )
 
-    Widget buildRefresh(BuildContext context, AsyncSnapshot<List<ArticleInfo>> snapshot){
-      if(snapshot != null && snapshot.data != null) {
-        if(isRefresh){
-          list.clear();
-          _refreshController.refreshCompleted();
-        }else{
-          _refreshController.loadComplete();
-        }
-        list.addAll(snapshot.data);
-      }
-      return SmartRefresher(
+      );
+    }
+
+    Widget buildRefresh(BuildContext context, List<ArticleInfo> list){
+
+      return  SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
           header: WaterDropHeader(),
@@ -91,7 +127,22 @@ class ArticleState extends State<Article>{
         },
         child: ListView.builder(itemBuilder: (BuildContext context, int index){
                   if(index == 0){
-                    return PageWidget(_articleBloc);
+                    print("builder object");
+                      return StreamBuilder(
+                        stream: _articleBloc.bannerStream,
+                        builder: (BuildContext context,AsyncSnapshot<List<BannerInfo>> snapshot){
+                          if(snapshot == null || snapshot.data == null){
+                            return Container(
+                              height: 0,
+                            );
+                          }else {
+                            return buildBanner(context, snapshot.data);
+                          }
+                        },
+                      );
+
+
+
                   }
                   //return Text("abc");
                   return ArticleItem(list[index]);
@@ -108,8 +159,16 @@ class ArticleState extends State<Article>{
     return StreamBuilder(
         stream: _articleBloc.articleStream,
         builder: (BuildContext context, AsyncSnapshot<List<ArticleInfo>> snapshot){
-
-            return buildRefresh(context,snapshot);
+          if(snapshot != null && snapshot.data != null) {
+            if(isRefresh){
+              list.clear();
+              _refreshController.refreshCompleted();
+            }else{
+              _refreshController.loadComplete();
+            }
+            list.addAll(snapshot.data);
+          }
+            return buildRefresh(context,list);
         },
     );
   }
@@ -175,7 +234,9 @@ class PageWidget extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     print("object build");
-    return Container(
+    return
+
+      Container(
         height: 230,
         child:StreamBuilder(
         stream: _articleBloc.bannerStream,
