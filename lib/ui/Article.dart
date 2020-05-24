@@ -32,13 +32,6 @@ class ArticleState extends State<Article>{
   @override
   void initState() {
     super.initState();
-    _articleBloc = new ArticleBloc();
-
-    _refreshController = RefreshController(initialRefresh: false);
-
-    _articleBloc.articleData.add(_currentPage);
-
-//    _articleBloc.actionData.add(null);
 
 
   }
@@ -46,6 +39,13 @@ class ArticleState extends State<Article>{
   @override
   Widget build(BuildContext context) {
 
+    _articleBloc = new ArticleBloc();
+
+    _refreshController = RefreshController(initialRefresh: false);
+
+    _articleBloc.refresh();
+
+//    _articleBloc.actionData.add(null);
 
     Widget buildRefresh(BuildContext context, AsyncSnapshot<List<ArticleInfo>> snapshot){
       if(snapshot != null && snapshot.data != null) {
@@ -87,20 +87,20 @@ class ArticleState extends State<Article>{
         controller: _refreshController,
         onRefresh:()async{
           isRefresh = true;
-          _articleBloc.articleData.add(0);
+          _articleBloc.refresh();
         },
         child: ListView.builder(itemBuilder: (BuildContext context, int index){
                   if(index == 0){
                     return PageWidget(_articleBloc);
-
                   }
+                  //return Text("abc");
                   return ArticleItem(list[index]);
               },
               itemCount: list.length,
         ),
         onLoading:()async{
           isRefresh = false;
-          _articleBloc.articleData.add(_currentPage + 1);
+          _articleBloc.load(_currentPage + 1);
         }
 
       );
@@ -174,6 +174,7 @@ class PageWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    print("object build");
     return Container(
         height: 230,
         child:StreamBuilder(
@@ -187,11 +188,7 @@ class PageWidget extends StatelessWidget{
         }
       )
     );
-      Container(
-      height: 230,
-      alignment:AlignmentDirectional.center,
-      child:buildBanner(context),
-    );
+
   }
 
 }

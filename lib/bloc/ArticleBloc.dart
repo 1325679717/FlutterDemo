@@ -11,8 +11,6 @@ class ArticleBloc{
 
   Stream<List<ArticleInfo>> get articleStream => _controller.stream.asBroadcastStream();
 
-  StreamController<int> _actionController = StreamController<int>();
-  StreamSink<int> get articleData => _actionController.sink;
 
   ///********首页banner///
 
@@ -20,30 +18,29 @@ class ArticleBloc{
   Sink<List<BannerInfo>> get _bannerSink => _banner.sink;
 
   Stream<List<BannerInfo>> get bannerStream => _banner.stream.asBroadcastStream();
-  StreamController actionBanner = StreamController();
-  StreamSink get actionData => actionBanner.sink;
+
   HomeRequest request;
   ArticleBloc(){
 
     request = new HomeRequest();
 
-    _actionController.stream.listen((data){
-      request.getArticleList(data).then((result){
-        articleSink.add(result);
-      });
+  }
+  void refresh(){
+    request.getArticleList(0).then((result){
+      articleSink.add(result);
     });
-
-    actionBanner.stream.listen((event) {
-      request.getArticleBanner().then((value){
-        _bannerSink.add(value);
-      });
+    request.getArticleBanner().then((result){
+      _bannerSink.add(result);
+    });
+  }
+  void load(int page){
+    request.getArticleList(page).then((result){
+      articleSink.add(result);
     });
   }
   void dispose(){
-    _actionController.close();
     _controller.close();
 
     _banner.close();
-    actionBanner.close();
   }
 }
