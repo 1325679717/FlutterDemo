@@ -20,7 +20,7 @@ class Article extends StatefulWidget{
 void initData(State state,HomeRequest request,int page){
 
 }
-class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
+class ArticleState extends State<Article>{
   RefreshController _refreshController;
 
   int _currentPage = 0;
@@ -44,10 +44,12 @@ class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
     _refreshController = RefreshController(initialRefresh: false);
 
     _articleBloc.refresh();
-
+    /**
+     * banner
+     */
     Widget buildBanner (BuildContext context, List<BannerInfo> banners){
-      return Container(
-        height: 230,
+      return AspectRatio(
+        aspectRatio: 16/9,
         child:PageView(
         children: banners.map((banner)=> Container(
           child: Container(
@@ -89,6 +91,9 @@ class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
 
       );
     }
+    /**
+     * item
+     */
     Widget buildItem(BuildContext context, int index){
       ArticleInfo _articleInfo = list[index];
       return Container(
@@ -242,6 +247,4 @@ class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
     super.dispose();
   }
 
-  @override
-  bool get wantKeepAlive => true;
 }
