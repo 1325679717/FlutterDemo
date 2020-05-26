@@ -1,7 +1,5 @@
 
 # flutterApp
-=======
-# flutter_app1223
 
 A new Flutter project.
 
