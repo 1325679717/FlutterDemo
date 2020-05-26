@@ -69,8 +69,7 @@ class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
                       children: <Widget>[
                         Container(
                           child: Text(
-                            "banner",
-//                          banner.title,
+                          banner.title,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Colors.white
