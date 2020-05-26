@@ -212,27 +212,7 @@ class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
             )
           ],
         ),
-//        ListView.builder(itemBuilder: (BuildContext context, int index){
-//                  if(index == 0){
-//                    print("builder object");
-////                    return buildBanner(context, List<BannerInfo>());
-//                      return StreamBuilder(
-//                        stream: _articleBloc.bannerStream,
-//                        builder: (BuildContext context,AsyncSnapshot<List<BannerInfo>> snapshot){
-//                          if(snapshot == null || snapshot.data == null){
-//                            return Container(
-//                              height: 0,
-//                            );
-//                          }else {
-//                            return buildBanner(context, snapshot.data);
-//                          }
-//                        },
-//                      );
-//
-//                  }
-//                  return ArticleItem(list[index]);
-//              },
-//              itemCount: list.length,
+
 //        ),
         onLoading:()async{
           isRefresh = false;
@@ -265,94 +245,4 @@ class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
 
   @override
   bool get wantKeepAlive => true;
-}
-
-
-class ArticleItem extends StatefulWidget{
-  ArticleInfo _articleInfo;
-  ArticleItem(ArticleInfo _articleInfo){
-    this._articleInfo = _articleInfo;
-  }
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return ItemState(_articleInfo);
-  }
-
-}
-class ItemState extends State<ArticleItem>{
-  ArticleInfo _articleInfo;
-  TimelineInfo _info;
-  ItemState(ArticleInfo _articleInfo){
-    this._articleInfo = _articleInfo;
-    _info = ZhInfo();
-  }
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return GestureDetector(
-      onTap: (){
-      Navigator.push(context, MaterialPageRoute(
-          builder: (_){
-            return WebDetail(_articleInfo);
-          }
-      ));
-    },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 10, color: Color(0xffe2e2e2)))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              alignment:AlignmentDirectional.topStart,
-              child: Stack(
-                children: <Widget>[
-                  Text(
-                      _articleInfo.author == ""?_articleInfo.shareUser:_articleInfo.author,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style:TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey
-                      )
-                  ),
-                  Align(
-                    child: Text(
-                        _articleInfo.niceShareDate,
-//                        DateUtil.getDateStrByDateTime(_articleInfo.shareDate),
-                        maxLines: 1,
-                        style:TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey
-                        )
-                    ),
-                    alignment: Alignment.centerRight,
-                  ),
-
-
-                ],
-              ),
-            ),
-
-            Container(
-                padding: EdgeInsets.only(top: 10),
-                alignment:AlignmentDirectional.topStart,
-                child:Text(
-                    _articleInfo.title,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style:TextStyle(
-                        fontSize: 15,
-                        color: Colors.black
-                    )
-                )
-            ),
-          ],
-        ),
-      ),
-    );
-
-  }
-
 }
