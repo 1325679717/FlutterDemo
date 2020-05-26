@@ -9,7 +9,7 @@ class ArticleBloc{
   StreamController<List<ArticleInfo>> _controller = StreamController<List<ArticleInfo>>();
   Sink<List<ArticleInfo>> get articleSink => _controller.sink;
 
-  Stream<List<ArticleInfo>> get articleStream => _controller.stream.asBroadcastStream();
+  Stream<List<ArticleInfo>> get articleStream => _controller.stream;
 
 
   ///********首页banner///
@@ -17,7 +17,7 @@ class ArticleBloc{
   StreamController<List<BannerInfo>> _banner = StreamController<List<BannerInfo>>();
   Sink<List<BannerInfo>> get _bannerSink => _banner.sink;
 
-  Stream<List<BannerInfo>> get bannerStream => _banner.stream.asBroadcastStream();
+  Stream<List<BannerInfo>> get bannerStream => _banner.stream;
 
   HomeRequest request;
   ArticleBloc(){

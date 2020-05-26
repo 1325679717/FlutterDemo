@@ -20,7 +20,7 @@ class Article extends StatefulWidget{
 void initData(State state,HomeRequest request,int page){
 
 }
-class ArticleState extends State<Article>{
+class ArticleState extends State<Article> with AutomaticKeepAliveClientMixin{
   RefreshController _refreshController;
 
   int _currentPage = 0;
@@ -90,7 +90,73 @@ class ArticleState extends State<Article>{
 
       );
     }
+    Widget buildItem(BuildContext context, int index){
+      ArticleInfo _articleInfo = list[index];
+      return Container(
+        child: GestureDetector(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(
+                builder: (_){
+                  return WebDetail(_articleInfo);
+                }
+            ));
+          },
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 10, color: Color(0xffe2e2e2)))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  alignment:AlignmentDirectional.topStart,
+                  child: Stack(
+                    children: <Widget>[
+                      Text(
+                          _articleInfo.author == ""?_articleInfo.shareUser:_articleInfo.author,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style:TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey
+                          )
+                      ),
+                      Align(
+                        child: Text(
+                            _articleInfo.niceShareDate,
+//                        DateUtil.getDateStrByDateTime(_articleInfo.shareDate),
+                            maxLines: 1,
+                            style:TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey
+                            )
+                        ),
+                        alignment: Alignment.centerRight,
+                      ),
 
+
+                    ],
+                  ),
+                ),
+
+                Container(
+                    padding: EdgeInsets.only(top: 10),
+                    alignment:AlignmentDirectional.topStart,
+                    child:Text(
+                        _articleInfo.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style:TextStyle(
+                            fontSize: 15,
+                            color: Colors.black
+                        )
+                    )
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     Widget buildRefresh(BuildContext context, List<ArticleInfo> list){
 
       return  SmartRefresher(
@@ -125,10 +191,10 @@ class ArticleState extends State<Article>{
           isRefresh = true;
           _articleBloc.refresh();
         },
-        child: ListView.builder(itemBuilder: (BuildContext context, int index){
-                  if(index == 0){
-                    print("builder object");
-                      return StreamBuilder(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: StreamBuilder(
                         stream: _articleBloc.bannerStream,
                         builder: (BuildContext context,AsyncSnapshot<List<BannerInfo>> snapshot){
                           if(snapshot == null || snapshot.data == null){
@@ -139,16 +205,35 @@ class ArticleState extends State<Article>{
                             return buildBanner(context, snapshot.data);
                           }
                         },
-                      );
-
-
-
-                  }
-                  //return Text("abc");
-                  return ArticleItem(list[index]);
-              },
-              itemCount: list.length,
+              )
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(buildItem,childCount:list.length),
+            )
+          ],
         ),
+//        ListView.builder(itemBuilder: (BuildContext context, int index){
+//                  if(index == 0){
+//                    print("builder object");
+////                    return buildBanner(context, List<BannerInfo>());
+//                      return StreamBuilder(
+//                        stream: _articleBloc.bannerStream,
+//                        builder: (BuildContext context,AsyncSnapshot<List<BannerInfo>> snapshot){
+//                          if(snapshot == null || snapshot.data == null){
+//                            return Container(
+//                              height: 0,
+//                            );
+//                          }else {
+//                            return buildBanner(context, snapshot.data);
+//                          }
+//                        },
+//                      );
+//
+//                  }
+//                  return ArticleItem(list[index]);
+//              },
+//              itemCount: list.length,
+//        ),
         onLoading:()async{
           isRefresh = false;
           _articleBloc.load(_currentPage + 1);
@@ -168,7 +253,7 @@ class ArticleState extends State<Article>{
             }
             list.addAll(snapshot.data);
           }
-            return buildRefresh(context,list);
+          return buildRefresh(context,list);
         },
     );
   }
@@ -177,81 +262,9 @@ class ArticleState extends State<Article>{
     _articleBloc.dispose();
     super.dispose();
   }
-}
-/**
- *
- * pageView item
- *
- * */
-class PageWidget extends StatelessWidget{
-  ArticleBloc _articleBloc;
-  List<BannerInfo> list = [];
-  PageWidget(ArticleBloc _articleBloc){
-    this._articleBloc = _articleBloc;
-  }
-  Widget buildBanner (BuildContext context){
-      return PageView(
-               children: list.map((banner)=> Container(
-                 child: Container(
-                   child: Stack(
-                     children: <Widget>[
-                       Positioned(
-                         child: Image.network(
-                             banner.imagePath,
-                             fit:BoxFit.cover),
-                       ),
-//
-                       Align(
-                         alignment: Alignment.bottomRight,
-                         child: Container(
-                           height: 25,
-                           decoration: BoxDecoration(color: Colors.black12),
-                           margin: EdgeInsets.all(0),
-                           child: Row(
-                             children: <Widget>[
-                               Container(
-                                 child: Text(
-                                   "banner",
-//                          banner.title,
-                                   overflow: TextOverflow.ellipsis,
-                                   style: TextStyle(
-                                       color: Colors.white
-                                   ),
-                                 ),
-                               )
-                             ],
-                           ),
-                         ),
-                       )
-//                    )
-                     ],
-                   ),
-                 ),
-               )).toList(),
-         );
-   }
+
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    print("object build");
-    return
-
-      Container(
-        height: 230,
-        child:StreamBuilder(
-        stream: _articleBloc.bannerStream,
-        builder: (BuildContext context, AsyncSnapshot<List<BannerInfo>> snapshot) {
-          if (snapshot.data == null) {
-            return Container(width: 0, height: 0);
-          }
-          list.addAll(snapshot.data);
-          return buildBanner(context);
-        }
-      )
-    );
-
-  }
-
+  bool get wantKeepAlive => true;
 }
 
 
