@@ -20,6 +20,13 @@ class ArticleBloc{
   Stream<List<BannerInfo>> get bannerStream => _banner.stream;
 
   HomeRequest request;
+
+  ///********收藏///
+
+  StreamController<String> _addCollectcontroller = StreamController<String>();
+  Sink<String> get addCollectarticleSink => _addCollectcontroller.sink;
+
+  Stream<String> get addCollectarticleStream => _addCollectcontroller.stream;
   ArticleBloc(){
 
     request = new HomeRequest();

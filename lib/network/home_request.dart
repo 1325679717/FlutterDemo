@@ -70,6 +70,12 @@ class HomeRequest {
     return articles;
   }
 
+  Future<String> addCollect() async{
+    final url = "https://www.wanandroid.com/lg/collect/add/json";
+
+    final result = await HttpRequest.request(url);
+    return result;
+  }
   /**
    * bannerAll
    */

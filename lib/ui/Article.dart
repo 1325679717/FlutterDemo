@@ -9,6 +9,8 @@ import 'package:flutter_app1223/network/home_request.dart';
 import 'package:flutter_app1223/ui/WebDetail.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'Login.dart';
+
 class Article extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -145,15 +147,36 @@ class ArticleState extends State<Article>{
                 Container(
                     padding: EdgeInsets.only(top: 10),
                     alignment:AlignmentDirectional.topStart,
-                    child:Text(
-                        _articleInfo.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style:TextStyle(
-                            fontSize: 15,
-                            color: Colors.black
-                        )
-                    )
+                    child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child:  Text(
+                                _articleInfo.title,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                softWrap: true,
+                                style:TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black
+                                )
+                            ),
+                          ),
+
+                          Align(
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (_){
+                                        return Login();
+                                      }
+                                  ));
+                                },
+                                child: Icon(_articleInfo.collect?Icons.star:Icons.star_border),
+                              ),
+                              alignment: Alignment.centerRight
+                          )
+                        ],
+                      )
                 ),
               ],
             ),
