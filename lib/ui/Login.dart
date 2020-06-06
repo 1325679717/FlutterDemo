@@ -2,6 +2,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app1223/bloc/LoginBloc.dart';
 
 class Login extends StatefulWidget{
   @override
@@ -12,6 +13,8 @@ class Login extends StatefulWidget{
 class LoginState extends State<Login>{
   final userNameController = TextEditingController();
   final pwdController = TextEditingController();
+
+  final LoginBloc loginBloc = new LoginBloc();
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -45,7 +48,8 @@ class LoginState extends State<Login>{
                 textColor: Colors.white,
                 child: Text("登录"),
                 onPressed: (){
-                  print("MaterialButton userName:${userNameController.text},pwd:${pwdController.text}");
+                  loginBloc.login(context,userNameController.text, pwdController.text);
+//                  print("MaterialButton userName:${userNameController.text},pwd:${pwdController.text}");
                 },
 
               )
