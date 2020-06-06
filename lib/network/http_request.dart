@@ -5,7 +5,7 @@ class HttpRequest {
   static BaseOptions baseOptions = BaseOptions(connectTimeout: 1000 * 30);
   static Dio dio = Dio(baseOptions);
 
-  static Future<T> request<T>(String url, {
+  static Future<Response> request(String url, {
                         String method = "get",
                         Map<String, dynamic> params}) async {
     // 1.单独相关的设置
@@ -14,8 +14,8 @@ class HttpRequest {
 
     // 2.发送网络请求
     try {
-      Response response = await dio.request<T>(url, queryParameters: params, options: options);
-      return response.data;
+      Response response = await dio.request(url, queryParameters: params, options: options);
+      return response;
     } on DioError catch (e) {
       throw e;
     }

@@ -10,7 +10,8 @@ class LoginRequest{
     HashMap<String, dynamic> p = new HashMap();
     p["username"] = userName;
     p["password"] = pwd;
-    final result = await HttpRequest.request(url,method: "post",params: p);
+    final response = await HttpRequest.request(url,method: "post",params: p);
+    final result = response.data;
     final data = result["data"];
     LoginInfo info = LoginInfo.fromJson(data);
     return info;
