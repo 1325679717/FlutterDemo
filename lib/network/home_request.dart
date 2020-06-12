@@ -13,7 +13,7 @@ class HomeRequest {
     final url = "https://douban.uieee.com/v2/movie/top250?start=$start&count=$count";
 
     // 2.发送请求
-    final response = await HttpRequest.request(url);
+    final response = await HttpRequest().request(url);
     final result = response.data;
     // 3.转成模型对象
     final subjects = result["subjects"];
@@ -31,7 +31,7 @@ class HomeRequest {
     final url = "https://www.wanandroid.com/article/list/$start/json";
 
     // 2.发送请求
-    final response = await HttpRequest.request(url);
+    final response = await HttpRequest().request(url);
     final result = response.data;
 
     // 3.转成模型对象
@@ -56,7 +56,7 @@ class HomeRequest {
     final url = "https://www.wanandroid.com/banner/json";
 
     // 2.发送请求
-    final response = await HttpRequest.request(url);
+    final response = await HttpRequest().request(url);
     final result = response.data;
 
     // 3.转成模型对象
@@ -75,7 +75,7 @@ class HomeRequest {
   Future<String> addCollect() async{
     final url = "https://www.wanandroid.com/lg/collect/add/json";
 
-    final response = await HttpRequest.request(url);
+    final response = await HttpRequest().request(url);
     final result = response.data;
     return result;
   }
@@ -88,7 +88,7 @@ class HomeRequest {
     final url2 = "https://www.wanandroid.com/banner/json";
 
     // 2.发送请求
-    final result = await HttpRequest.requestMerge(url,url2);
+    final result = await HttpRequest().requestMerge(url,url2);
 
     return result;
   }

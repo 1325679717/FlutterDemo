@@ -1,11 +1,14 @@
 import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app1223/common/global.dart';
+import 'package:flutter_app1223/constants/constant.dart';
+import 'package:flutter_app1223/network/http_request.dart';
 import 'package:flutter_app1223/widget/BottomNavigationWidget.dart';
 import 'package:flutter_app1223/ui/Home.dart';
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await SpUtil.getInstance();
-  runApp(MyApp());
+  Global.init(() {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -64,7 +67,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  @override
+  void initState() {
+    super.initState();
+    String cookie = SpUtil.getString(BaseConstant.key_cookie);
+    if(ObjectUtil.isNotEmpty(cookie)){
+          HttpRequest().putCookie(cookie);
+    }
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
